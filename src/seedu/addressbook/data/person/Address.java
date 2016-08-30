@@ -8,11 +8,28 @@ import seedu.addressbook.data.exception.IllegalValueException;
  */
 public class Address {
 
-    public static final String EXAMPLE = "123, some street";
-    public static final String MESSAGE_ADDRESS_CONSTRAINTS = "Person addresses can be in any format";
-    public static final String ADDRESS_VALIDATION_REGEX = ".+";
+    public static final String ADDRESS_PARTS_DELIMITER = ",";
+    public static final String EXAMPLE = 
+          Block.EXAMPLE + ADDRESS_PARTS_DELIMITER + " " 
+            + Street.EXAMPLE + ADDRESS_PARTS_DELIMITER + " "
+                  + Unit.EXAMPLE + ADDRESS_PARTS_DELIMITER + " " 
+                    + PostalCode.EXAMPLE;
+           
+     public static final String MESSAGE_ADDRESS_CONSTRAINTS = "A person's address must be in format: BLOCK, STREET, UNIT, POSTAL_CODE";
+     
+     public static final String ADDRESS_VALIDATION_REGEX = "([.]|[^,])*,([.]|[^,])*,([.]|[^,])*,([.]|[^,])*";
 
-    public final String value;
+     private static final int ADDRESS_PARTS_COUNT = 4;
+     private static final int ADDRESS_PARTS_INDEX_BLOCK = 0;
+     private static final int ADDRESS_PARTS_INDEX_STREET = 1;
+     private static final int ADDRESS_PARTS_INDEX_UNIT = 2;
+     private static final int ADDRESS_PARTS_INDEX_POSTALCODE = 3;
+     
+     private Block _block; 
+     private Street _street;
+     private Unit _unit;
+     private PostalCode _postalCode;
+
     private boolean isPrivate;
 
     /**
@@ -25,15 +42,51 @@ public class Address {
         if (!isValidAddress(address)) {
             throw new IllegalValueException(MESSAGE_ADDRESS_CONSTRAINTS);
         }
-        this.value = address;
+        final String[] splitAddressComponents = address.trim().split(",");
+         
+       this.block = new Block(splitAddressComponents[0].trim());
+       this.street = new Street(splitAddressComponents[1].trim());
+       this.unit = new Unit(splitAddressComponents[2].trim());
+       this.postalCode = new PostalCode(splitAddressComponents[3].trim());
+       this.value = address;
     }
 
     /**
-     * Returns true if a given string is a valid person email.
+     * Returns true if a given string is a valid person address.
      */
     public static boolean isValidAddress(String test) {
-        return test.matches(ADDRESS_VALIDATION_REGEX);
+         if(!test.matches(ADDRESS_VALIDATION_REGEX))
+           return false;
+         
+         final String[] splitAddressComponents = test.trim().split(",");
+         if(!isValidAddress(splitAddressComponents))
+           return false;
+         
+         return true;
     }
+
+   public static boolean isValidAddress(String[] addressComponents){
+       return isBlockValid(addressComponents[ADDRESS_INDEX_BLOCK])
+               && isStreetValid(addressComponents[ADDRESS_INDEX_STREET])
+               && isUnitValid(addressComponents[ADDRESS_INDEX_UNIT])
+               && isPostalCodeValid(addressComponents[ADDRESS_INDEX_POSTAL_CODE]);
+    }
+
+     private static boolean isBlockValid(String block){
+       return block.trim().matches(ADDRESS_BLOCK_VALIDATION_REGEX);
+     }
+     
+     private static boolean isStreetValid(String street){
+       return street.trim().matches(ADDRESS_STREET_VALIDATION_REGEX);
+     }
+     
+     private static boolean isUnitValid(String unit){
+       return unit.trim().matches(ADDRESS_UNIT_VALIDATION_REGEX);
+     }
+     
+     private static boolean isPostalCodeValid(String postalCode){
+       return postalCode.trim().matches(ADDRESS_POSTAL_CODE_VALIDATION_REGEX);
+      }
 
     @Override
     public String toString() {
@@ -56,3 +109,4 @@ public class Address {
         return isPrivate;
     }
 }
+
