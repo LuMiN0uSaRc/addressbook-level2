@@ -138,7 +138,9 @@ public class StorageFile {
             throw new StorageOperationException("Error parsing file data format");
         } catch (IllegalValueException ive) {
             throw new StorageOperationException("File contains illegal data values; data type constraints not met");
-        }
+        }catch (Exception e){
+           e.printStackTrace();
+           throw new StorageOperationException("Simultaneous editting file error occurred.");
     }
 
     public String getPath() {
