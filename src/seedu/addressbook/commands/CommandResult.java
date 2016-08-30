@@ -17,8 +17,7 @@ public class CommandResult {
     private final List<? extends ReadOnlyPerson> relevantPersons;
 
     public CommandResult(String feedbackToUser) {
-        this.feedbackToUser = feedbackToUser;
-        relevantPersons = null;
+        return this.feedbackToUser;
     }
 
     public CommandResult(String feedbackToUser, List<? extends ReadOnlyPerson> relevantPersons) {
