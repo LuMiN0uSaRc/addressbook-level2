@@ -4,6 +4,7 @@ import static seedu.addressbook.common.Messages.*;
 
 import seedu.addressbook.commands.CommandResult;
 import seedu.addressbook.common.Utils;
+import seedu.addressbook.data.Tagging;
 import seedu.addressbook.data.person.ReadOnlyPerson;
 
 import java.io.InputStream;
@@ -166,4 +167,12 @@ public class TextUi {
         return String.format(MESSAGE_INDEXED_LIST_ITEM, visibleIndex, listItem);
     }
 
+    private static String getListOfTaggings() {
+       ArrayList<String> listItems = Tagging.getListOfTags(); 
+        final StringBuilder formatted = new StringBuilder();
+        for (String listItem : listItems) {
+            formatted.append(listItem).append("\n");
+        }
+        return formatted.toString();
+    }
 }
